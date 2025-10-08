@@ -1,0 +1,164 @@
+public class ListaLigadaManual {
+
+    // El puntero inicial o "cabeza" (head)
+    private NodoPelicula cabeza;
+    private int tamanio;
+
+    public ListaLigadaManual() {
+        this.cabeza = null;
+        this.tamanio = 0;
+    }
+
+    // =========================================================
+    // A. Método para AGREGAR UN OBJETO A LA LISTA (Al final)
+    // =========================================================
+    public void agregarAlFinal(Pelicula p) {
+        NodoPelicula nuevoNodo = new NodoPelicula(p);
+
+        if (cabeza == null) {
+            // Caso 1: La lista está vacía, el nuevo nodo es la cabeza
+            cabeza = nuevoNodo;
+        } else {
+            // Caso 2: Recorrer la lista hasta encontrar el último nodo
+            NodoPelicula actual = cabeza;
+            while (actual.siguiente != null) {
+                actual = actual.siguiente;
+            }
+            // El último nodo encontrado apunta al nuevo nodo
+            actual.siguiente = nuevoNodo;
+        }
+        tamanio++;
+        System.out.println("✅ Agregada al final: " + p);
+    }
+    
+    // =========================================================
+    // G. Método para AGREGAR UN OBJETO A LA LISTA (Al inicio)
+    // =========================================================
+    public void agregarAlInicio(Pelicula p) {
+        NodoPelicula nuevoNodo = new NodoPelicula(p);
+        
+        // El puntero del nuevo nodo apunta a la cabeza actual
+        nuevoNodo.siguiente = cabeza;
+        
+        // La cabeza ahora es el nuevo nodo
+        cabeza = nuevoNodo; 
+        tamanio++;
+        System.out.println("🚀 Agregada al inicio: " + p);
+    }
+
+    // =========================================================
+    // B. Método para ELIMINAR UN OBJETO DE LA LISTA
+    // =========================================================
+    public void eliminarPeliculaPorTitulo(String titulo) {
+        if (cabeza == null) {
+            System.out.println("⚠️ Lista vacía, no se puede eliminar.");
+            return;
+        }
+
+        // Caso 1: La cabeza es el nodo a eliminar
+        if (cabeza.dato.getTitulo().equalsIgnoreCase(titulo)) {
+            cabeza = cabeza.siguiente; // La cabeza se mueve al siguiente nodo
+            tamanio--;
+            System.out.println("❌ Eliminada (Cabeza): " + titulo);
+            return;
+        }
+
+        // Caso 2: El nodo está en el medio o al final
+        NodoPelicula actual = cabeza;
+        NodoPelicula anterior = null;
+
+        while (actual != null && !actual.dato.getTitulo().equalsIgnoreCase(titulo)) {
+            anterior = actual;
+            actual = actual.siguiente;
+        }
+
+        if (actual != null) {
+            // Se encontró el nodo: el nodo anterior salta el nodo actual
+            anterior.siguiente = actual.siguiente; 
+            tamanio--;
+            System.out.println("❌ Eliminada: " + titulo);
+        } else {
+            System.out.println("⚠️ Error: Película '" + titulo + "' no encontrada.");
+        }
+    }
+
+    // =========================================================
+    // C. Método para AGREGAR UN OBJETO ENTRE 2 OBJETOS
+    // (Por índice, ya que no se puede buscar "entre" 2 objetos de forma simple)
+    // =========================================================
+    public void insertarPeliculaEnPosicion(Pelicula p, int indice) {
+        if (indice < 0 || indice > tamanio) {
+            System.out.println("⚠️ Error: Índice " + indice + " fuera de rango.");
+            return;
+        }
+        
+        if (indice == 0) {
+            agregarAlInicio(p);
+            return;
+        }
+        
+        NodoPelicula nuevoNodo = new NodoPelicula(p);
+        NodoPelicula actual = cabeza;
+        
+        // Recorrer hasta el nodo ANTERIOR al índice deseado
+        for (int i = 0; i < indice - 1; i++) {
+            actual = actual.siguiente;
+        }
+        
+        // 1. El nuevo nodo apunta al que estaba en el índice
+        nuevoNodo.siguiente = actual.siguiente;
+        
+        // 2. El nodo anterior apunta al nuevo nodo
+        actual.siguiente = nuevoNodo;
+        
+        tamanio++;
+        System.out.println("✨ Insertada en índice " + indice + ": " + p);
+    }
+
+    // =========================================================
+    // D. Método para MOSTRAR LA LISTA
+    // =========================================================
+    public void mostrarCatalogo() {
+        System.out.println("\n--- CATÁLOGO MANUAL DE PELÍCULAS ---");
+        if (cabeza == null) {
+            System.out.println("(Lista vacía)");
+            return;
+        }
+
+        NodoPelicula actual = cabeza;
+        int indice = 0;
+        
+        // Recorrer la lista mientras el nodo actual no sea nulo
+        while (actual != null) {
+            System.out.println("[" + indice++ + "] " + actual.dato);
+            actual = actual.siguiente; // Mover al siguiente nodo usando el puntero
+        }
+        System.out.println("------------------------------------");
+    }
+
+    // =========================================================
+    // Método MAIN para la Demostración
+    // =========================================================
+    public static void main(String[] args) {
+        ListaLigadaManual demo = new ListaLigadaManual();
+        
+        // 1. Agregar al final (Método A)
+        demo.agregarAlFinal(new Pelicula("Star Wars", 1977));
+        demo.agregarAlFinal(new Pelicula("Titanic", 1997));
+        
+        // 2. Agregar al inicio (Método G)
+        demo.agregarAlInicio(new Pelicula("El Padrino", 1972));
+        
+        demo.mostrarCatalogo();
+
+        // 3. Insertar entre dos objetos (Método C) - En el índice 2
+        demo.insertarPeliculaEnPosicion(new Pelicula("Pulp Fiction", 1994), 2); 
+        
+        demo.mostrarCatalogo();
+
+        // 4. Eliminar (Método B)
+        demo.eliminarPeliculaPorTitulo("Star Wars");
+        
+        demo.mostrarCatalogo();
+    }
+}
