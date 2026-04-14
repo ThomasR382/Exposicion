@@ -31,7 +31,7 @@ public class Menu {
 
             case 2:
                 System.out.println("Nombre de la cancion a eliminar ");
-                String tit = sc.nextLine();
+                String tit = sc.next();
                 System.out.println(m.Eliminar(tit));
                 break;
 

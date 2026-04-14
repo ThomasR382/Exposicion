@@ -48,7 +48,7 @@ public class Metodos {
                     if (actual == primero) primero = actual.siguiente;
                     if (actual == ultimo) ultimo = actual.anterior;
                 }
-                System.out.println("La cancion "+ Titulo + "ha sido eliminada");
+                return "La cancion "+ Titulo + " ha sido eliminada";
             }
 
             actual = actual.siguiente;
